@@ -1,10 +1,16 @@
-function Tile(x, y, pattern, color) {
+function Tile(x, y, pattern, group) {
 
   var imageResult = this.getImageFromPattern(pattern);
 
+  //Save the pattern as a property
+  this.pattern = pattern;
+
+  //Reference to group
+  this.group = group;
+
   //Run sprite code
   Phaser.Sprite.call(this, game, x, y, imageResult.sheet);
-  this.anchor.set(0.5);
+  this.anchor.setTo(0.5, 0.5);
 
   //Choose frame, rotate, and flip
   this.frame = imageResult.frame;
@@ -19,7 +25,7 @@ function Tile(x, y, pattern, color) {
 
   //Enable input and dragging
   this.inputEnabled = true;
-  this.input.enableDrag(true);
+  this.input.enableDrag();
   this.input.dragFromCenter = false;
   this.input.pixelPerfectClick = true;
 
@@ -30,13 +36,34 @@ Tile.prototype = Object.create(Phaser.Sprite.prototype);
 
 Tile.prototype.dropTile = function() {
 
-  this.slideBack();
+  //If dropped in left grid
+  if(pointInBox(this.x, this.y, gameState.leftGrid.x, gameState.leftGrid.y, gameState.leftGrid.width, gameState.leftGrid.height))
+  {
+    if(!gameState.leftGrid.placeTile(this))
+      this.slideBack();
+  }
+  //If dropped in right grid
+  else if(pointInBox(this.x, this.y, gameState.rightGrid.x, gameState.rightGrid.y, gameState.rightGrid.width, gameState.rightGrid.height))
+  {
+
+  }
+  else
+  {
+    this.slideBack();
+  }
 
 };
 
 Tile.prototype.slideBack = function() {
 
-  game.add.tween(this).to({x: this.input.dragStartPoint.x, y: this.input.dragStartPoint.y}, 1000, Phaser.Easing.Linear.In, true);
+  //Disable dragging
+  this.input.disableDrag();
+
+  var time = this.input.dragStartPoint.distance(new Phaser.Point(this.x, this.y)) * 1.2;
+  game.add.tween(this).to({x: this.input.dragStartPoint.x, y: this.input.dragStartPoint.y}, time, Phaser.Easing.Quadratic.InOut, true);
+
+  //Enable dragging again when it gets back to its original spot
+  game.time.events.add(time, function() {this.input.enableDrag();}, this);
 
 };
 
@@ -67,6 +94,12 @@ Tile.prototype.getImageFromPattern = function(pattern) {
   {
     return {sheet: 'tile1', frame: 0, rotation: 0};
   }
+
+};
+
+Tile.prototype.leaveGroup = function() {
+
+  this.group.remove(this);
 
 };
 

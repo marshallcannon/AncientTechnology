@@ -1,3 +1,4 @@
+//Allows us to compare arrays
 Array.prototype.equals = function (array) {
     // if the other array is a falsy value, return
     if (!array)
@@ -21,3 +22,17 @@ Array.prototype.equals = function (array) {
     }
     return true;
 };
+
+//Check if a point is inside a box
+function pointInBox(pointX, pointY, boxX, boxY, boxWidth, boxHeight) {
+
+  if(pointX >= boxX && pointX <= boxX + boxWidth)
+  {
+    if(pointY >= boxY && pointY <= boxY + boxHeight)
+    {
+      return true;
+    }
+  }
+  return false;
+
+}

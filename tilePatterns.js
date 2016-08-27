@@ -151,12 +151,12 @@ game.tilePatterns3 = [
 
   {
     pattern: [
-      [0, 0, 0],
       [1, 0, 0],
-      [1, 1, 1]
+      [1, 1, 1],
+      [0, 0, 0]
     ],
 
-    result: {sheet: 'tile3', frame: 1, rotation: 90, mirrorX: false, mirrorY: true}
+    result: {sheet: 'tile3', frame: 1, rotation: 90, mirrorX: true, mirrorY: false}
   },
 
   {
@@ -166,7 +166,7 @@ game.tilePatterns3 = [
       [0, 0, 1]
     ],
 
-    result: {sheet: 'tile3', frame: 1, rotation: 270, mirrorX: false, mirrorY: true}
+    result: {sheet: 'tile3', frame: 1, rotation: 270, mirrorX: true, mirrorY: false}
   },
 
   {
