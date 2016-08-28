@@ -118,7 +118,6 @@ PuzzleGrid.prototype.placeTile = function(tile) {
   //3x3
   else
   {
-    console.log('Attempting ' + gridX + ', ' + gridY);
     for(i = 0; i < 3; i++)
     {
       for(j = 0; j < 3; j++)
@@ -127,7 +126,6 @@ PuzzleGrid.prototype.placeTile = function(tile) {
         {
           if(this.grid[gridY+i][gridX+j] !== 0)
           {
-            console.log(gridX+j, gridY+i);
             return false;
           }
         }

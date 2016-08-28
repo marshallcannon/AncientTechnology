@@ -48,6 +48,12 @@ Tile.prototype.dropTile = function() {
     if(!gameState.rightGrid.placeTile(this))
       this.slideBack();
   }
+  //If dropped in the bag
+  else if(pointInBox(this.x, this.y, gameState.bag.x, gameState.bag.y, gameState.bag.width, gameState.bag.height))
+  {
+    if(!gameState.bag.addTile(this))
+      this.slideBack();
+  }
   else
   {
     this.slideBack();
@@ -57,14 +63,25 @@ Tile.prototype.dropTile = function() {
 
 Tile.prototype.slideBack = function() {
 
-  //Disable dragging
-  this.input.disableDrag();
+  this.slideTo(this.input.dragStartPoint);
 
-  var time = this.input.dragStartPoint.distance(new Phaser.Point(this.x, this.y)) * 1.2;
-  game.add.tween(this).to({x: this.input.dragStartPoint.x, y: this.input.dragStartPoint.y}, time, Phaser.Easing.Quadratic.InOut, true);
+};
 
-  //Enable dragging again when it gets back to its original spot
-  game.time.events.add(time, function() {this.input.enableDrag();}, this);
+Tile.prototype.slideTo = function(destination) {
+
+  var time = destination.distance(new Phaser.Point(this.x, this.y)) * 1.2;
+  if(time > 0)
+  {
+
+    //Disable dragging
+    this.input.disableDrag();
+
+    game.add.tween(this).to({x: destination.x, y: destination.y}, time, Phaser.Easing.Quadratic.InOut, true);
+
+    //Enable dragging again when it gets back to its original spot
+    game.time.events.add(time, function() {this.input.enableDrag();}, this);
+
+  }
 
 };
 
@@ -100,7 +117,17 @@ Tile.prototype.getImageFromPattern = function(pattern) {
 
 Tile.prototype.leaveGroup = function() {
 
-  this.group.remove(this);
+  if(this.group)
+  {
+    console.log(this.group);
+    this.group.remove(this);
+    //If it's coming from the bag, move all the tiles in the bag
+    if(this.group === gameState.bagGroup)
+    {
+      gameState.bag.updateAllTiles();
+    }
+    this.group = null;
+  }
 
 };
 
