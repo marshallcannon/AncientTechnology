@@ -8,6 +8,9 @@ var loadingState = {
 
     game.load.image('gameBackground', 'assets/background.png');
 
+    //Load buildings
+    game.load.image('quarry', 'assets/quarry.png');
+
   },
 
   create: function() {

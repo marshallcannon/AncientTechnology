@@ -24,11 +24,11 @@ Array.prototype.equals = function (array) {
 };
 
 //Check if a point is inside a box
-function pointInBox(pointX, pointY, boxX, boxY, boxWidth, boxHeight) {
+function pointInBox(point, box) {
 
-  if(pointX >= boxX && pointX <= boxX + boxWidth)
+  if(point.x >= box.x && point.x <= box.x + box.width)
   {
-    if(pointY >= boxY && pointY <= boxY + boxHeight)
+    if(point.y >= box.y && point.y <= box.y + box.height)
     {
       return true;
     }

@@ -12,6 +12,10 @@ function Tile(x, y, pattern, group) {
   Phaser.Sprite.call(this, game, x, y, imageResult.sheet);
   this.anchor.setTo(0.5, 0.5);
 
+  //We use these variables to keep track of where the tile is in a puzzle grid
+  this.gridX = 0;
+  this.gridY = 0;
+
   //Choose frame, rotate, and flip
   this.frame = imageResult.frame;
   this.angle = imageResult.rotation;
@@ -29,27 +33,42 @@ function Tile(x, y, pattern, group) {
   this.input.dragFromCenter = false;
   this.input.pixelPerfectClick = true;
 
+  this.events.onDragStart.add(this.pickupTile, this);
   this.events.onDragStop.add(this.dropTile, this);
 
 }
 Tile.prototype = Object.create(Phaser.Sprite.prototype);
 
+Tile.prototype.pickupTile = function() {
+
+  //If it's coming from a grid, update the grid
+  if(this.group === gameState.leftGridGroup)
+  {
+    gameState.leftGrid.removeFromGrid(this, this.gridX, this.gridY);
+  }
+  if(this.group === gameState.rightGridGroup)
+  {
+    gameState.rightGrid.removeFromGrid(this, this.gridX, this.gridY);
+  }
+
+};
+
 Tile.prototype.dropTile = function() {
 
   //If dropped in left grid
-  if(pointInBox(this.x, this.y, gameState.leftGrid.x, gameState.leftGrid.y, gameState.leftGrid.width, gameState.leftGrid.height))
+  if(pointInBox({x: this.x, y: this.y}, gameState.leftGrid))
   {
     if(!gameState.leftGrid.placeTile(this))
       this.slideBack();
   }
   //If dropped in right grid
-  else if(pointInBox(this.x, this.y, gameState.rightGrid.x, gameState.rightGrid.y, gameState.rightGrid.width, gameState.rightGrid.height))
+  else if(pointInBox({x: this.x, y: this.y}, gameState.rightGrid))
   {
     if(!gameState.rightGrid.placeTile(this))
       this.slideBack();
   }
   //If dropped in the bag
-  else if(pointInBox(this.x, this.y, gameState.bag.x, gameState.bag.y, gameState.bag.width, gameState.bag.height))
+  else if(pointInBox({x: this.x, y: this.y}, gameState.bag))
   {
     if(!gameState.bag.addTile(this))
       this.slideBack();
@@ -57,6 +76,14 @@ Tile.prototype.dropTile = function() {
   else
   {
     this.slideBack();
+    if(this.group === gameState.leftGridGroup)
+    {
+      gameState.leftGrid.addToGrid(this, this.gridX, this.gridY);
+    }
+    if(this.group === gameState.rightGridGroup)
+    {
+      gameState.rightGrid.addToGrid(this, this.gridX, this.gridY);
+    }
   }
 
 };
@@ -119,7 +146,6 @@ Tile.prototype.leaveGroup = function() {
 
   if(this.group)
   {
-    console.log(this.group);
     this.group.remove(this);
     //If it's coming from the bag, move all the tiles in the bag
     if(this.group === gameState.bagGroup)

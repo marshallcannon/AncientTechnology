@@ -37,7 +37,8 @@ Bag.prototype.updateAllTiles = function() {
   for(var i = 0; i < this.group.length; i++)
   {
     var tile = this.group.getAt(i);
-    tile.slideTo(this.tilePositions[this.group.getChildIndex(tile)]);
+    if(!tile.input.isDragged)
+      tile.slideTo(this.tilePositions[this.group.getChildIndex(tile)]);
   }
 
 };

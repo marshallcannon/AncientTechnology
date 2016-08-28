@@ -29,7 +29,9 @@ function PuzzleGrid(x, y, side) {
 
 }
 
-PuzzleGrid.prototype.drawGrid = function(pattern) {
+PuzzleGrid.prototype.drawGrid = function() {
+
+  var pattern = this.grid;
 
   //Set the grid offset
   var offset = 0;
@@ -113,6 +115,9 @@ PuzzleGrid.prototype.placeTile = function(tile) {
     tile.group = this.group;
     tile.x = gridX * 24 + this.x + 24;
     tile.y = gridY * 24 + this.y + 24;
+    tile.gridX = gridX;
+    tile.gridY = gridY;
+    this.addToGrid(tile, gridX, gridY);
     return true;
   }
   //3x3
@@ -136,7 +141,48 @@ PuzzleGrid.prototype.placeTile = function(tile) {
     tile.group = this.group;
     tile.x = gridX * 24 + this.x + 36;
     tile.y = gridY * 24 + this.y + 36;
+    tile.gridX = gridX;
+    tile.gridY = gridY;
+    this.addToGrid(tile, gridX, gridY);
     return true;
   }
+
+};
+
+PuzzleGrid.prototype.addToGrid = function(tile, gridX, gridY) {
+
+  for(var i = 0; i < tile.pattern.length; i++)
+  {
+    for(var j = 0; j < tile.pattern.length; j++)
+    {
+      if(tile.pattern[i][j] === 1)
+      {
+        this.grid[i+gridY][j+gridX] = 1;
+      }
+    }
+  }
+  this.drawGrid();
+
+};
+
+PuzzleGrid.prototype.removeFromGrid = function(tile, gridX, gridY) {
+
+  for(var i = 0; i < tile.pattern.length; i++)
+  {
+    for(var j = 0; j < tile.pattern.length; j++)
+    {
+      if(tile.pattern[i][j] === 1)
+      {
+        this.grid[i+gridY][j+gridX] = 0;
+      }
+    }
+  }
+
+};
+
+PuzzleGrid.prototype.switchGrid = function(building) {
+
+  this.targetBuilding = building;
+  this.grid = building.puzzle;
 
 };
