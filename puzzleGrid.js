@@ -1,24 +1,19 @@
-function PuzzleGrid(x, y, side) {
+function PuzzleGrid(x, y, gridGroup) {
 
   this.x = x;
   this.y = y;
   this.width = 192;
   this.height = 192;
-  if(side === 'left')
-  {
-    this.group = gameState.leftGridGroup;
-  }
-  else {
-    this.group = gameState.rightGridGroup;
-  }
+
+  this.group = gridGroup;
 
   this.grid = [
     [4,4,4,4,4,4,4,4],
     [4,4,4,4,4,4,4,4],
-    [4,4,4,0,0,4,4,4],
-    [4,4,4,0,0,4,4,4],
-    [4,4,0,0,0,0,4,4],
-    [4,4,4,0,0,4,4,4],
+    [4,4,4,4,4,4,4,4],
+    [4,4,4,4,4,4,4,4],
+    [4,4,4,4,4,4,4,4],
+    [4,4,4,4,4,4,4,4],
     [4,4,4,4,4,4,4,4],
     [4,4,4,4,4,4,4,4]
   ];
@@ -113,11 +108,11 @@ PuzzleGrid.prototype.placeTile = function(tile) {
     tile.leaveGroup();
     this.group.add(tile);
     tile.group = this.group;
+    console.log(this.group);
     tile.x = gridX * 24 + this.x + 24;
     tile.y = gridY * 24 + this.y + 24;
     tile.gridX = gridX;
     tile.gridY = gridY;
-    this.addToGrid(tile, gridX, gridY);
     return true;
   }
   //3x3
@@ -161,7 +156,6 @@ PuzzleGrid.prototype.addToGrid = function(tile, gridX, gridY) {
       }
     }
   }
-  this.drawGrid();
 
 };
 
@@ -182,7 +176,39 @@ PuzzleGrid.prototype.removeFromGrid = function(tile, gridX, gridY) {
 
 PuzzleGrid.prototype.switchGrid = function(building) {
 
+  if(this.targetBuilding)
+    {
+    //Save the old tiles
+    var selfLength = this.group.length;
+    for(var i = 0; i < selfLength; i++)
+    {
+      console.log(selfLength);
+      //Hide each tile
+      this.group.getTop().hide();
+      //Copy over each tile
+      this.targetBuilding.saveGroup.add(this.group.getTop(i));
+    }
+  }
+  //Clear the group to be safe
+  this.group.removeAll();
+
+  //Load the new grid
   this.targetBuilding = building;
-  this.grid = building.puzzle;
+  this.grid = this.targetBuilding.puzzle;
+  this.drawGrid();
+  //Add tiles to puzzle grid group
+  var length = this.targetBuilding.saveGroup.length;
+  for(var k = 0; k < length; k++)
+  {
+    this.group.add(this.targetBuilding.saveGroup.getTop());
+  }
+  //Place tiles in grid
+  for(var j = 0; j < this.group.length; j++)
+  {
+    //Place each tile
+    this.addToGrid(this.group.getAt(j), this.group.getAt(j).gridX, this.group.getAt(j).gridY);
+    //Show each tile
+    this.group.getAt(j).show();
+  }
 
 };

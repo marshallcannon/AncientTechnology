@@ -157,5 +157,19 @@ Tile.prototype.leaveGroup = function() {
 
 };
 
+Tile.prototype.hide = function() {
+
+  this.visible = false;
+  this.inputEnabled = false;
+
+};
+
+Tile.prototype.show = function() {
+
+  this.visible = true;
+  this.inputEnabled = true;
+
+};
+
 //Possible tile colors
 game.colors = [0xbe3939,0x404e82,0x86e29d,0xedc433,0xb0fff1,0xe270ff];

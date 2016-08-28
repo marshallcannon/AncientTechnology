@@ -27,12 +27,13 @@ var gameState = {
     this.backgroundGroup.add(game.make.sprite(0, 0, 'gameBackground'));
 
     //Add left and right grids
-    this.leftGrid = new PuzzleGrid(29, 379, 'left');
-    this.rightGrid = new PuzzleGrid(579, 379, 'right');
+    this.leftGrid = new PuzzleGrid(29, 379, this.leftGridGroup);
+    this.rightGrid = new PuzzleGrid(579, 379, this.rightGridGroup);
     this.bag = new Bag();
 
     //Add buildings
     this.quarry = game.add.existing(new Quarry());
+    this.crystal = game.add.existing(new Crystal());
 
   },
 
