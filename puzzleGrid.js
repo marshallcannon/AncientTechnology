@@ -26,6 +26,12 @@ function PuzzleGrid(x, y, gridGroup) {
 
 PuzzleGrid.prototype.drawGrid = function() {
 
+  if(this.targetBuilding)
+  {
+    console.log(this.targetBuilding.puzzle);
+    console.log(this.grid);
+  }
+
   var pattern = this.grid;
 
   //Set the grid offset
@@ -194,7 +200,7 @@ PuzzleGrid.prototype.switchGrid = function(building) {
 
   //Load the new grid
   this.targetBuilding = building;
-  this.grid = this.targetBuilding.puzzle;
+  this.grid = this.targetBuilding.puzzle.slice();
   this.drawGrid();
   //Add tiles to puzzle grid group
   var length = this.targetBuilding.saveGroup.length;
