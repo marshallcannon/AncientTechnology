@@ -71,7 +71,6 @@ PuzzleGrid.prototype.placeTile = function(tile) {
   var relativeY = tile.y - this.y - tile.pattern.length*12;
   var gridX = Math.round(relativeX / 24);
   var gridY = Math.round(relativeY / 24);
-  console.log(gridX, gridY);
 
   // gameState.graphics.beginFill(0x0000FF, 0.5);
   // gameState.graphics.drawRect(gridX*24+this.x, gridY*24+this.y, 24, 24);
@@ -102,23 +101,29 @@ PuzzleGrid.prototype.placeTile = function(tile) {
     {
       for(j = 0; j < 2; j++)
       {
-        if(tile.pattern[j][i] === 1)
+        if(tile.pattern[i][j] === 1)
         {
           if(this.grid[gridY+i][gridX+j] !== 0)
             return false;
         }
       }
     }
+    tile.leaveGroup();
+    this.group.add(tile);
+    tile.group = this.group;
+    tile.x = gridX * 24 + this.x + 24;
+    tile.y = gridY * 24 + this.y + 24;
     return true;
   }
   //3x3
   else
   {
+    console.log('Attempting ' + gridX + ', ' + gridY);
     for(i = 0; i < 3; i++)
     {
       for(j = 0; j < 3; j++)
       {
-        if(tile.pattern[j][i] === 1)
+        if(tile.pattern[i][j] === 1)
         {
           if(this.grid[gridY+i][gridX+j] !== 0)
           {
@@ -128,6 +133,11 @@ PuzzleGrid.prototype.placeTile = function(tile) {
         }
       }
     }
+    tile.leaveGroup();
+    this.group.add(tile);
+    tile.group = this.group;
+    tile.x = gridX * 24 + this.x + 36;
+    tile.y = gridY * 24 + this.y + 36;
     return true;
   }
 

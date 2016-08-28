@@ -45,7 +45,8 @@ Tile.prototype.dropTile = function() {
   //If dropped in right grid
   else if(pointInBox(this.x, this.y, gameState.rightGrid.x, gameState.rightGrid.y, gameState.rightGrid.width, gameState.rightGrid.height))
   {
-
+    if(!gameState.rightGrid.placeTile(this))
+      this.slideBack();
   }
   else
   {
