@@ -13,7 +13,7 @@ var gameState = {
     this.backgroundGroup = game.add.group();
 
     //Create graphics object
-    this.graphics = game.add.graphics(0, 0);
+    this.puzzleGridGraphics = game.add.graphics(0, 0);
 
     //Create tile groups
     this.bagGroup = game.add.group();
@@ -34,6 +34,9 @@ var gameState = {
     //Add buildings
     this.quarry = game.add.existing(new Quarry());
     this.crystal = game.add.existing(new Crystal());
+
+    //What kind of tiles can be produced
+    this.techLevel = 2;
 
   },
 

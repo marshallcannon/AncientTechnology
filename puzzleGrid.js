@@ -26,12 +26,6 @@ function PuzzleGrid(x, y, gridGroup) {
 
 PuzzleGrid.prototype.drawGrid = function() {
 
-  if(this.targetBuilding)
-  {
-    console.log(this.targetBuilding.puzzle);
-    console.log(this.grid);
-  }
-
   var pattern = this.grid;
 
   //Set the grid offset
@@ -44,7 +38,8 @@ PuzzleGrid.prototype.drawGrid = function() {
     offset = 24;
 
   //Draw the pattern
-  var g = gameState.graphics;
+  var g = gameState.puzzleGridGraphics;
+  g.clear();
   for(var i = 0; i < pattern.length; i++)
   {
     for(var j = 0; j < pattern[i].length; j++)
@@ -67,7 +62,7 @@ PuzzleGrid.prototype.drawGrid = function() {
 
 };
 
-//Check if a tile fits in the grid
+//Check if a tile fits in the grid and place it
 PuzzleGrid.prototype.placeTile = function(tile) {
 
   var relativeX = tile.x - this.x - tile.pattern.length*12;
@@ -90,6 +85,9 @@ PuzzleGrid.prototype.placeTile = function(tile) {
         tile.group = this.group;
         tile.x = gridX * 24 + this.x + 12;
         tile.y = gridY * 24 + this.y + 12;
+        tile.gridX = gridX;
+        tile.gridY = gridY;
+        this.addToGrid(tile, gridX, gridY);
         return true;
       }
       else
@@ -111,14 +109,16 @@ PuzzleGrid.prototype.placeTile = function(tile) {
         }
       }
     }
+    //Set the tiles group
     tile.leaveGroup();
     this.group.add(tile);
     tile.group = this.group;
-    console.log(this.group);
+    //Position the tile
     tile.x = gridX * 24 + this.x + 24;
     tile.y = gridY * 24 + this.y + 24;
     tile.gridX = gridX;
     tile.gridY = gridY;
+    this.addToGrid(tile, gridX, gridY);
     return true;
   }
   //3x3
@@ -150,6 +150,7 @@ PuzzleGrid.prototype.placeTile = function(tile) {
 
 };
 
+//Update the grid array with a new tile
 PuzzleGrid.prototype.addToGrid = function(tile, gridX, gridY) {
 
   for(var i = 0; i < tile.pattern.length; i++)
@@ -162,6 +163,9 @@ PuzzleGrid.prototype.addToGrid = function(tile, gridX, gridY) {
       }
     }
   }
+
+  if(this.checkSolved())
+    this.targetBuilding.upgrade();
 
 };
 
@@ -216,5 +220,19 @@ PuzzleGrid.prototype.switchGrid = function(building) {
     //Show each tile
     this.group.getAt(j).show();
   }
+
+};
+
+PuzzleGrid.prototype.checkSolved = function() {
+
+  for(var i = 0; i < this.grid.length; i++)
+  {
+    for(var j = 0; j < this.grid[i].length; j++)
+    {
+      if(this.grid[i][j] === 0)
+        return false;
+    }
+  }
+  return true;
 
 };

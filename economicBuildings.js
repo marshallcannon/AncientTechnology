@@ -11,7 +11,7 @@ function Building(x, y, image, gridPreference) {
   this.progress = 0;
   this.goal = 100;
 
-  this.techLevel = 2;
+  this.level = 0;
 
   if(gridPreference)
     this.gridPreference = gridPreference;
@@ -65,6 +65,15 @@ Building.prototype.click = function() {
 
 };
 
+Building.prototype.upgrade = function() {
+
+  this.level++;
+
+  if(this.level <= this.upgradeList.length)
+    this.upgradeList[this.level-1].call(this);
+
+};
+
 /*###########################################################
                         QUARRY
 ###########################################################*/
@@ -83,13 +92,15 @@ function Quarry() {
     [4,4,4,4,4,4,4,4]
   ];
 
+  this.goal = 100;
+
 }
 Quarry.prototype = Object.create(Building.prototype);
 
 Quarry.prototype.makeNewTile = function() {
 
   var randomList;
-  if(this.techLevel === 2)
+  if(gameState.techLevel === 2)
     randomList = game.rnd.between(1, 3);
   else
     randomList = game.rnd.between(1, 5);
@@ -112,6 +123,23 @@ Quarry.prototype.trigger = function() {
   }
 
 };
+
+Quarry.prototype.upgradeList = [
+  //Level 1
+  function() {
+
+    this.active = true;
+    console.log('Upgraded!');
+
+  },
+
+  //Level 2
+  function() {
+
+
+
+  }
+];
 
 /*######################################################
                       Crystal

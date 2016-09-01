@@ -45,10 +45,12 @@ Tile.prototype.pickupTile = function() {
   if(this.group === gameState.leftGridGroup)
   {
     gameState.leftGrid.removeFromGrid(this, this.gridX, this.gridY);
+    gameState.leftGrid.drawGrid();
   }
   if(this.group === gameState.rightGridGroup)
   {
     gameState.rightGrid.removeFromGrid(this, this.gridX, this.gridY);
+    gameState.rightGrid.drawGrid();
   }
 
 };
@@ -76,14 +78,6 @@ Tile.prototype.dropTile = function() {
   else
   {
     this.slideBack();
-    if(this.group === gameState.leftGridGroup)
-    {
-      gameState.leftGrid.addToGrid(this, this.gridX, this.gridY);
-    }
-    if(this.group === gameState.rightGridGroup)
-    {
-      gameState.rightGrid.addToGrid(this, this.gridX, this.gridY);
-    }
   }
 
 };
@@ -91,6 +85,15 @@ Tile.prototype.dropTile = function() {
 Tile.prototype.slideBack = function() {
 
   this.slideTo(this.input.dragStartPoint);
+
+  if(this.group !== gameState.leftGridGroup)
+  {
+    gameState.leftGrid.addToGrid(this, this.gridX, this.gridY);
+  }
+  if(this.group === gameState.rightGridGroup)
+  {
+    gameState.rightGrid.addToGrid(this, this.gridX, this.gridY);
+  }
 
 };
 
@@ -106,7 +109,7 @@ Tile.prototype.slideTo = function(destination) {
     game.add.tween(this).to({x: destination.x, y: destination.y}, time, Phaser.Easing.Quadratic.InOut, true);
 
     //Enable dragging again when it gets back to its original spot
-    game.time.events.add(time, function() {this.input.enableDrag();}, this);
+    game.time.events.add(time, function() {this.input.enableDrag(); this.input.pixelPerfectClick = true;}, this);
 
   }
 
