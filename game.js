@@ -9,6 +9,9 @@ var gameState = {
     //Advanced timing for fps display
     game.time.advancedTiming = true;
 
+    //Start physics system
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+
     //Create groups
     this.backgroundGroup = game.add.group();
 
@@ -23,6 +26,15 @@ var gameState = {
     this.leftGridGroup.name = 'leftGrid';
     this.rightGridGroup.name = 'rightGrid';
 
+    //Create building group
+    this.buildingGroup = game.add.group();
+
+    //Create unit groups
+    this.enemyUnits = game.add.group();
+    this.enemyUnits.enableBody = true;
+    this.allyUnits = game.add.group();
+    this.allyUnits.enableBody = true;
+
     //Add game background
     this.backgroundGroup.add(game.make.sprite(0, 0, 'gameBackground'));
 
@@ -31,9 +43,12 @@ var gameState = {
     this.rightGrid = new PuzzleGrid(579, 379, this.rightGridGroup);
     this.bag = new Bag();
 
-    //Add buildings
-    this.quarry = game.add.existing(new Quarry());
-    this.crystal = game.add.existing(new Crystal());
+    //Add economic buildings
+    this.quarry = this.buildingGroup.add(new Quarry());
+    this.crystal = this.buildingGroup.add(new Crystal());
+
+    //Add militaryBuildings
+    this.biterBuilding = this.buildingGroup.add(new BiterBuilding());
 
     //What kind of tiles can be produced
     this.techLevel = 2;

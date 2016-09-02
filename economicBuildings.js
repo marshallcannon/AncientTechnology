@@ -47,7 +47,7 @@ Building.prototype.update = function() {
 
   this.progressBar.clear();
   this.progressBar.beginFill(0xFFFFFF, 0.75);
-  this.progressBar.drawRect(0, 0, this.progress/this.goal*150, 7);
+  this.progressBar.drawRect(0, 0, this.progress/this.goal*this.width, 7);
   this.progressBar.endFill();
 
 };

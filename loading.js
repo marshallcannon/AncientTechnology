@@ -11,6 +11,10 @@ var loadingState = {
     //Load buildings
     game.load.image('quarry', 'assets/quarry.png');
     game.load.image('crystal', 'assets/crystal.png');
+    game.load.image('biterBuilding', 'assets/biterBuilding.png');
+
+    //Load units
+    game.load.image('biter', 'assets/biter.png');
 
   },
 

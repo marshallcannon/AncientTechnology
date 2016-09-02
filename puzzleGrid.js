@@ -165,7 +165,10 @@ PuzzleGrid.prototype.addToGrid = function(tile, gridX, gridY) {
   }
 
   if(this.checkSolved())
+  {
     this.targetBuilding.upgrade();
+    this.complete();
+  }
 
 };
 
